@@ -1,0 +1,85 @@
+{
+  "name": "code-security-audit",
+  "version": "0.1.0",
+  "description": "A callable, offline Skill that scans inline source files for dangerous code patterns, insecure configuration, weak crypto, and license gaps using only the Python standard library. Applies a fixed set of heuristic regex rules line-by-line and returns findings (path+line+rule_id+severity+recommendation), a summary, and a block/review/pass verdict. Heuristic static checks, not a full SAST; human review required. No network, no API keys.",
+  "entrypoint": "code_audit.py",
+  "runtime": {
+    "type": "python",
+    "python": ">=3.9",
+    "command": "python3 code_audit.py",
+    "dependencies": "requirements.txt"
+  },
+  "permissions": {
+    "network": false,
+    "filesystem_write": [],
+    "environment_variables": []
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "mode": {
+        "type": "string",
+        "enum": ["audit"]
+      },
+      "files": {
+        "type": "array",
+        "description": "Inline source files to scan.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string", "description": "Logical file path (used for reporting and LICENSE detection)." },
+            "content": { "type": "string", "description": "Full file contents to scan line-by-line." }
+          },
+          "required": ["path", "content"]
+        }
+      }
+    },
+    "required": ["mode", "files"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "skill": { "type": "string" },
+      "version": { "type": "string" },
+      "mode": { "type": "string" },
+      "data": {
+        "type": "object",
+        "properties": {
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string" },
+                "line": { "type": "integer" },
+                "rule_id": { "type": "string" },
+                "category": { "type": "string" },
+                "severity": { "type": "string", "enum": ["high", "medium", "low"] },
+                "excerpt": { "type": "string" },
+                "recommendation": { "type": "string" }
+              }
+            }
+          },
+          "summary": { "type": "object" },
+          "verdict": { "type": "string", "enum": ["block", "review", "pass"] }
+        }
+      },
+      "error": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "required": ["ok", "skill", "version"]
+  },
+  "compliance_notes": [
+    "These are heuristic static checks, not a full SAST; human review required. Findings are advisory and may include reasonable false positives.",
+    "This Skill runs fully offline: it makes no network calls and reads no API keys or credentials.",
+    "All source input is supplied inline (files[].path / files[].content); the Skill does not fetch, scrape, clone, or write files.",
+    "Output is deterministic: fixed rule set, stable sort order (severity, path, line), and no randomness or timestamps.",
+    "Errors are returned as a structured envelope with ok=false and an error.code; a Python traceback is never emitted."
+  ]
+}

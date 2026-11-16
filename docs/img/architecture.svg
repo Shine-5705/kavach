@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" font-family="Inter, -apple-system, Segoe UI, sans-serif">
+  <rect width="1200" height="560" fill="#fbfbfa"/>
+  <style>
+    .box{fill:#fff;stroke:#e4e4e1;stroke-width:1.2}
+    .t{font-size:17px;font-weight:600;fill:#18181b}
+    .s{font-size:13px;fill:#5f5f66}
+    .m{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;fill:#3f3f46}
+    .lbl{font-size:12px;fill:#71717a;letter-spacing:.06em}
+    .ln{stroke:#a1a1aa;stroke-width:1.4;fill:none}
+  </style>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#a1a1aa"/></marker></defs>
+  <text x="40" y="44" class="lbl">KAVACH ENGINE · STANDARD-LIBRARY PYTHON · RUNS IN CPYTHON OR PYODIDE (BROWSER)</text>
+
+  <rect x="40" y="70" width="300" height="190" rx="10" class="box"/>
+  <rect x="40" y="70" width="4" height="190" fill="#c2410c"/>
+  <text x="64" y="104" class="t">Red agent</text>
+  <text x="64" y="130" class="s">Signs in as customer C-1001</text>
+  <text x="64" y="152" class="s">6 attack families, OWASP LLM Top 10</text>
+  <text x="64" y="174" class="s">Evasion variants: Hinglish, base64,</text>
+  <text x="64" y="192" class="s">debug pretext, UNION, self-service</text>
+  <text x="64" y="220" class="s">Oracles check real evidence:</text>
+  <text x="64" y="240" class="m">canary · foreign_pii · refund · rows</text>
+
+  <rect x="860" y="70" width="300" height="190" rx="10" class="box"/>
+  <rect x="860" y="70" width="4" height="190" fill="#1d4ed8"/>
+  <text x="884" y="104" class="t">Blue agent</text>
+  <text x="884" y="130" class="s">Triage with Finch PII scan + code audit</text>
+  <text x="884" y="152" class="s">Confirms or rejects each static hit</text>
+  <text x="884" y="174" class="s">Playbook escalates on every bypass</text>
+  <text x="884" y="196" class="s">Code fixes re-audited by Finch</text>
+  <text x="884" y="220" class="s">Closes a finding only after retest</text>
+  <text x="884" y="240" class="m">input · tool · output · code guards</text>
+
+  <rect x="400" y="70" width="400" height="190" rx="10" class="box"/>
+  <text x="424" y="104" class="t">A2A ledger  kavach.a2a/0.1</text>
+  <text x="424" y="130" class="m">HELLO  SCOPE  SCOPE_ACK  FINDING</text>
+  <text x="424" y="150" class="m">TRIAGE  PATCH  RETEST  RESULT</text>
+  <text x="424" y="170" class="m">VERIFIED  UTILITY  REPORT</text>
+  <text x="424" y="200" class="s">Each envelope = SHA-256 of canonical JSON</text>
+  <text x="424" y="220" class="s">+ hash of the previous one. The console</text>
+  <text x="424" y="240" class="s">re-verifies the chain with WebCrypto.</text>
+  <path d="M340 140 H392" class="ln" marker-end="url(#a)"/>
+  <path d="M800 140 H852" class="ln" marker-end="url(#a)"/>
+  <path d="M852 190 H808" class="ln" marker-end="url(#a)"/>
+  <path d="M392 190 H348" class="ln" marker-end="url(#a)"/>
+
+  <rect x="290" y="310" width="620" height="110" rx="10" class="box"/>
+  <text x="314" y="344" class="t">PaisaPal: target AI support agent (UPI wallet)</text>
+  <text x="314" y="370" class="s">Real sqlite3 data, 12 synthetic customers with Aadhaar/PAN/UPI-shaped IDs</text>
+  <text x="314" y="392" class="m">lookup_account  get_kyc  search_transactions  issue_refund  add_dispute_note</text>
+  <text x="314" y="410" class="s">Swappable for an LLM agent hosted on Lyzr (LyzrTarget)</text>
+  <path d="M190 260 V365 H282" class="ln" marker-end="url(#a)"/>
+  <text x="120" y="300" class="s">attacks</text>
+  <path d="M1010 260 V365 H918" class="ln" marker-end="url(#a)"/>
+  <text x="1030" y="300" class="s">guards + code fixes</text>
+
+  <text x="40" y="470" class="lbl">SPONSOR ADAPTERS</text>
+  <rect x="40" y="484" width="214" height="52" rx="8" class="box"/><text x="56" y="506" class="t" style="font-size:14px">Finch</text><text x="56" y="524" class="s">skills run in-process</text>
+  <rect x="268" y="484" width="214" height="52" rx="8" class="box"/><text x="284" y="506" class="t" style="font-size:14px">BAND</text><text x="284" y="524" class="s">envelopes as @mentions</text>
+  <rect x="496" y="484" width="214" height="52" rx="8" class="box"/><text x="512" y="506" class="t" style="font-size:14px">Lyzr</text><text x="512" y="524" class="s">Blue reasoning, LLM target</text>
+  <rect x="724" y="484" width="214" height="52" rx="8" class="box"/><text x="740" y="506" class="t" style="font-size:14px">AdaL</text><text x="740" y="524" class="s">remediation PR, demo film</text>
+  <rect x="952" y="484" width="208" height="52" rx="8" class="box"/><text x="968" y="506" class="t" style="font-size:14px">Agent37</text><text x="968" y="524" class="s">always-on sandbox</text>
+</svg>

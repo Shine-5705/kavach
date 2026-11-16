@@ -1,0 +1,14 @@
+[project]
+name = "kavach"
+version = "0.1.0"
+description = "A Red agent and a Blue agent that harden AI assistants; fixes count only when the attack fails again."
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+[project.scripts]
+kavach = "kavach.cli:main"
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools.packages.find]
+include = ["kavach*"]

@@ -1,0 +1,110 @@
+{
+  "name": "pii-redactor",
+  "version": "0.1.0",
+  "description": "A callable, offline Skill that detects personal data (PII) in inline text and returns a REDACTED copy for safe publishing, using only the Python standard library. Detects EMAIL, PHONE, CREDIT_CARD (Luhn-valid), SSN, IPv4, and best-effort NAME, replaces each match with a [REDACTED_<TYPE>] token, masks raw values in findings, and re-scans the output to verify zero residual matches. No network, no API keys.",
+  "entrypoint": "pii_redactor.py",
+  "runtime": {
+    "type": "python",
+    "python": ">=3.9",
+    "command": "python3 pii_redactor.py",
+    "dependencies": "requirements.txt"
+  },
+  "permissions": {
+    "network": false,
+    "filesystem_write": [],
+    "environment_variables": []
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "mode": {
+        "type": "string",
+        "enum": ["redact"]
+      },
+      "files": {
+        "type": "array",
+        "description": "Inline documents to scrub. Each item is an object with 'path' (label) and 'content' (the text to redact).",
+        "items": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "content": { "type": "string" }
+          },
+          "required": ["content"]
+        }
+      },
+      "types": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["EMAIL", "PHONE", "CREDIT_CARD", "SSN", "IP", "NAME"]
+        },
+        "description": "Optional subset of detectors to enable. Defaults to all six."
+      },
+      "extra_names": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Optional additional names to redact (matched case-insensitively as whole words)."
+      }
+    },
+    "required": ["mode", "files"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "skill": { "type": "string" },
+      "version": { "type": "string" },
+      "mode": { "type": "string" },
+      "data": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string" },
+                "findings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": { "type": "string" },
+                      "line": { "type": "integer" },
+                      "char_start": { "type": "integer" },
+                      "char_end": { "type": "integer" },
+                      "value_masked": { "type": "string" }
+                    }
+                  }
+                },
+                "redacted_content": { "type": "string" },
+                "redaction_verified": { "type": "boolean" }
+              }
+            }
+          },
+          "summary": { "type": "object" },
+          "redaction_verified": { "type": "boolean" }
+        }
+      },
+      "error": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "required": ["ok", "skill", "version"]
+  },
+  "compliance_notes": [
+    "This Skill runs fully offline: it makes no network calls and reads no API keys or credentials.",
+    "All text is supplied inline (files[].content); the Skill does not fetch, scrape, or write files.",
+    "Findings never echo raw PII: each value is masked (e.g. 'j***@***.com', '4***'). Raw values are only removed from the content, never reported in full.",
+    "After redaction every detector is re-run on the output; redaction_verified is true only when zero residual matches remain.",
+    "NAME detection is intentionally high-recall / best-effort and can over- or under-redact; a human MUST review the output before relying on it.",
+    "This Skill provides redaction assistance, not legal advice; verify the redaction before relying on it to satisfy any privacy or compliance obligation.",
+    "Output is deterministic: no randomness, stable left-to-right ordering, and fixed [REDACTED_<TYPE>] tokens.",
+    "Errors are returned as a structured envelope with ok=false and an error.code; a Python traceback is never emitted."
+  ]
+}
