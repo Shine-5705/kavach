@@ -11,8 +11,9 @@ original attack **and every evasion variant**. Any bypass sends Blue up its
 playbook. Every message between the two agents is a typed envelope in a
 SHA-256 hash chain that anyone can re-verify.
 
-**Live console:** https://shine-5705.github.io/kavach/ (the whole engine
-runs in your browser tab with Pyodide; no backend, no keys)
+**Live site and arena:** https://shine-5705.github.io/kavach/ (the whole
+engine runs in your browser tab with Pyodide; no backend, no keys)
+· **Full console:** https://shine-5705.github.io/kavach/#/console
 · **Demo (96 s):** [media/kavach-demo.mp4](media/kavach-demo.mp4)
 · **Deck:** [media/kavach-deck.pdf](media/kavach-deck.pdf)
 
@@ -64,11 +65,36 @@ matching `ORDER BY … DESC`) as false positives instead of padding the report.
 - `engine/kavach/engagement.py`: the loop, streamed message by message.
 - `engine/kavach/adapters/`: BAND transport, Lyzr reasoner and target, AdaL
   harness.
-- `web/`: React console (Vite). `public/engine-worker.js` loads Pyodide in a
+- `web/`: React site and console (Vite). `src/pages/Landing.tsx` is the
+  landing page and live arena. `public/engine-worker.js` loads Pyodide in a
   Web Worker and streams envelopes into the UI, which re-checks the chain
   with WebCrypto.
 
+## Live arena
+
+The landing page at https://shine-5705.github.io/kavach/ runs the real engine
+(`engine/kavach`, unchanged, in Pyodide) in four clickable steps:
+
+1. **Run Red team**: all 15 attack variants run against an unguarded
+   PaisaPal, each on a fresh instance; every row shows the oracle's verdict
+   and evidence (expect 15/15 landing).
+2. **Deploy Blue defenses**: a full engagement runs and streams over the A2A
+   ledger; Blue's PATCH messages appear as rule cards (and the SQL code diff),
+   including the two escalations. The split-screen timeline shows every
+   Red ⇄ Blue envelope; the hash chain is re-verified with WebCrypto.
+3. **Rerun attacks**: the same 15 variants against Blue's rules (expect 0/15).
+4. **Run benign suite**: the six everyday requests must still work (6/6).
+
+Also on the page: a hero that replays a live engagement run in the tab, a
+per-family attack heatmap, a one-click **Kavach report** (Markdown download or
+printable PDF) built from the engagement record, and **Try your own attack**,
+which sends any message to an unguarded and a guarded PaisaPal and diffs the
+tool calls, guards fired, refund rows and replies. Every number on the page is
+computed in the tab. All of it is deterministic: no language model is called.
+
 ## Console
+
+The console lives at `#/console`.
 
 | Page | What it does |
 |---|---|

@@ -20,7 +20,7 @@ export function RunButton({ label = 'Run engagement', primary = true }: { label?
   const busy = !!live && !live.done
   return (
     <button className={'btn' + (primary ? ' primary' : '')} disabled={eng.stage !== 'ready' || busy}
-      onClick={async () => nav('/engagements/' + await startRun([], 260))}>
+      onClick={async () => nav('/console/engagements/' + await startRun([], 260))}>
       {eng.stage !== 'ready' && eng.stage !== 'error' ? 'Engine loading…' : busy ? 'Engagement running…' : label}
     </button>
   )
@@ -34,7 +34,7 @@ export default function Overview() {
     <div className="page">
       <PageHead title="Overview" sub="Kavach puts a Red agent and a Blue agent on opposite sides of your AI assistant. Red attacks it, Blue defends it, and a fix only counts once Red fails to break it again." />
       <div className="card">
-        <Empty title="No engagements yet" action={<div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}><RunButton label="Run the first engagement" />{live && !live.done && <Link className="btn" to={'/engagements/' + live.id}>Watch live</Link>}</div>}>
+        <Empty title="No engagements yet" action={<div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}><RunButton label="Run the first engagement" />{live && !live.done && <Link className="btn" to={'/console/engagements/' + live.id}>Watch live</Link>}</div>}>
           Red will sign in as an ordinary customer of PaisaPal, a deliberately vulnerable UPI-wallet support agent, and try six attack families plus evasion variants. Everything runs in this browser tab against a sandbox with synthetic customers. It takes about 20 seconds.
         </Empty>
         <div className="grid g3" style={{ borderTop: '1px solid var(--line)', padding: 16, gap: 24 }}>
@@ -51,9 +51,9 @@ export default function Overview() {
   const verified = r.findings.filter(f => f.status === 'verified').length
   return (
     <div className="page">
-      <PageHead title="Overview" sub={<>Latest engagement <Link className="mono" to={'/engagements/' + r.id} style={{ textDecoration: 'underline' }}>{r.id}</Link> · {fmtTime(r.createdAt)} · {r.source === 'import' ? 'imported from CLI' : 'run in this browser'}</>}
-        actions={<><Link className="btn" to="/sandbox">Open sandbox</Link><RunButton label="Run again" /></>} />
-      {live && !live.done && <div className="banner info">An engagement is running. <Link to={'/engagements/' + live.id} style={{ textDecoration: 'underline' }}>Watch it live</Link></div>}
+      <PageHead title="Overview" sub={<>Latest engagement <Link className="mono" to={'/console/engagements/' + r.id} style={{ textDecoration: 'underline' }}>{r.id}</Link> · {fmtTime(r.createdAt)} · {r.source === 'import' ? 'imported from CLI' : 'run in this browser'}</>}
+        actions={<><Link className="btn" to="/console/sandbox">Open sandbox</Link><RunButton label="Run again" /></>} />
+      {live && !live.done && <div className="banner info">An engagement is running. <Link to={'/console/engagements/' + live.id} style={{ textDecoration: 'underline' }}>Watch it live</Link></div>}
       <div className="card stats" style={{ marginBottom: 16 }}>
         <Stat k="Attacks landing" v={<>{m.final_attack_success.succeeded}<small> / {m.final_attack_success.total}</small></>} s={`was ${m.baseline_attack_success.succeeded} / ${m.baseline_attack_success.total} before Blue patched`} />
         <Stat k="Findings verified fixed" v={<>{verified}<small> / {r.findings.length}</small></>} s="closed only after a blocked retest" />
@@ -78,7 +78,7 @@ export default function Overview() {
             </table>
           </div>
           <div className="card">
-            <div className="card-head"><div><h2>Static review of the target's code</h2><p>Finch code-security-audit findings, each assessed by Blue</p></div><Link className="btn sm" to="/integrations">Run audit</Link></div>
+            <div className="card-head"><div><h2>Static review of the target's code</h2><p>Finch code-security-audit findings, each assessed by Blue</p></div><Link className="btn sm" to="/console/integrations">Run audit</Link></div>
             <table className="t">
               <thead><tr><th>Rule</th><th>Line</th><th>Severity</th><th>Blue's assessment</th></tr></thead>
               <tbody>{fp.map((f, i) => (
@@ -89,16 +89,16 @@ export default function Overview() {
         </div>
         <div className="grid">
           <div className="card">
-            <div className="card-head"><h2>Findings</h2><Link className="btn sm ghost" to="/findings">All</Link></div>
+            <div className="card-head"><h2>Findings</h2><Link className="btn sm ghost" to="/console/findings">All</Link></div>
             <div>{r.findings.map(f => (
-              <Link key={f.id} to={`/findings/${f.id}?e=${r.id}`} style={{ display: 'flex', gap: 10, padding: '10px 16px', borderBottom: '1px solid var(--line)', alignItems: 'center' }}>
+              <Link key={f.id} to={`/console/findings/${f.id}?e=${r.id}`} style={{ display: 'flex', gap: 10, padding: '10px 16px', borderBottom: '1px solid var(--line)', alignItems: 'center' }}>
                 <Sev s={f.severity} /><span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.title}</span>
               </Link>))}</div>
           </div>
           <div className="card">
-            <div className="card-head"><h2>Recent engagements</h2><Link className="btn sm ghost" to="/engagements">All</Link></div>
+            <div className="card-head"><h2>Recent engagements</h2><Link className="btn sm ghost" to="/console/engagements">All</Link></div>
             {list.slice(0, 5).map(e => (
-              <Link key={e.id} to={'/engagements/' + e.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 16px', borderBottom: '1px solid var(--line)' }}>
+              <Link key={e.id} to={'/console/engagements/' + e.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 16px', borderBottom: '1px solid var(--line)' }}>
                 <span className="mono">{e.id}</span><span className="muted">{e.metrics.baseline_attack_success.succeeded}→{e.metrics.final_attack_success.succeeded} landing</span>
               </Link>))}
           </div>

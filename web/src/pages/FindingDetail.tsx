@@ -6,13 +6,13 @@ import Body from '../components/Body'
 export default function FindingDetail() {
   const { fid } = useParams(); const { rec } = usePicked()
   const f = rec?.findings.find(x => x.id === fid)
-  if (!rec || !f) return <div className="page"><div className="card"><Empty title="Finding not found" action={<Link className="btn" to="/findings">All findings</Link>} /></div></div>
+  if (!rec || !f) return <div className="page"><div className="card"><Empty title="Finding not found" action={<Link className="btn" to="/console/findings">All findings</Link>} /></div></div>
   const thread = rec.messages.filter(m => m.thread === f.id)
   const results = thread.filter(m => m.type === 'RESULT')
   return (
     <div className="page">
-      <PageHead title={`${f.id} · ${f.title}`} sub={<><Sev s={f.severity} /> &nbsp;{CATEGORY[f.category]} · {f.owasp} · engagement <Link className="mono" to={'/engagements/' + rec.id} style={{ textDecoration: 'underline' }}>{rec.id}</Link></>}
-        actions={<><Link className="btn" to={`/sandbox?try=${encodeURIComponent(f.steps[f.steps.length - 1])}`}>Replay in sandbox</Link><Status s={f.status} /></>} />
+      <PageHead title={`${f.id} · ${f.title}`} sub={<><Sev s={f.severity} /> &nbsp;{CATEGORY[f.category]} · {f.owasp} · engagement <Link className="mono" to={'/console/engagements/' + rec.id} style={{ textDecoration: 'underline' }}>{rec.id}</Link></>}
+        actions={<><Link className="btn" to={`/console/sandbox?try=${encodeURIComponent(f.steps[f.steps.length - 1])}`}>Replay in sandbox</Link><Status s={f.status} /></>} />
       <div className="split">
         <div className="grid">
           <div className="card"><div className="card-head"><h2>Proof of exploit</h2><span className="muted" style={{ fontSize: 12.5 }}>Round 0, unguarded target</span></div>

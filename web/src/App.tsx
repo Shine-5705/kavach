@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import { HashRouter, Link, NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import Landing from './pages/Landing'
 import { Logo } from './components/ui'
 import { startEngine, useEngine, restartEngine } from './lib/engine'
 import { useEngagements, useLive } from './lib/store'
@@ -14,8 +15,8 @@ import Integrations from './pages/Integrations'
 import Protocol from './pages/Protocol'
 
 const NAV = [
-  ['/', 'Overview'], ['/engagements', 'Engagements'], ['/findings', 'Findings'], ['/defenses', 'Defenses'],
-  ['/sandbox', 'Target sandbox'], ['/integrations', 'Integrations'], ['/protocol', 'A2A protocol'],
+  ['/console', 'Overview'], ['/console/engagements', 'Engagements'], ['/console/findings', 'Findings'], ['/console/defenses', 'Defenses'],
+  ['/console/sandbox', 'Target sandbox'], ['/console/integrations', 'Integrations'], ['/console/protocol', 'A2A protocol'],
 ] as const
 
 function EngineStatus() {
@@ -27,8 +28,8 @@ function EngineStatus() {
 
 function Crumbs() {
   const { pathname } = useLocation()
-  const parts = pathname.split('/').filter(Boolean)
-  const top = NAV.find(n => n[0] === '/' + (parts[0] || ''))?.[1] || 'Overview'
+  const parts = pathname.split('/').filter(Boolean).slice(1)
+  const top = NAV.find(n => n[0] === '/console' + (parts[0] ? '/' + parts[0] : ''))?.[1] || 'Overview'
   return <div className="crumbs"><span>PaisaPal Support</span><span className="faint">/</span><b>{top}</b>{parts[1] && <><span className="faint">/</span><span className="mono">{decodeURIComponent(parts[1])}</span></>}</div>
 }
 
@@ -40,13 +41,13 @@ function Shell() {
   return (
     <div className="shell">
       <aside className="side">
-        <div className="brand"><Logo /><div>Kavach<small>Red and Blue agents for AI apps</small></div></div>
+        <Link to="/" className="brand"><Logo /><div>Kavach<small>Red and Blue agents for AI apps</small></div></Link>
         <div className="nav-label">Workspace</div>
         <nav className="nav">
           {NAV.map(([to, label]) => (
-            <NavLink key={to} to={to} end={to === '/'}>{label}
-              {to === '/engagements' && <span className="count">{live && !live.done ? 'live' : list.length || ''}</span>}
-              {to === '/findings' && openCount ? <span className="count">{openCount} open</span> : null}
+            <NavLink key={to} to={to} end={to === '/console'}>{label}
+              {to === '/console/engagements' && <span className="count">{live && !live.done ? 'live' : list.length || ''}</span>}
+              {to === '/console/findings' && openCount ? <span className="count">{openCount} open</span> : null}
             </NavLink>
           ))}
         </nav>
@@ -57,17 +58,17 @@ function Shell() {
       </aside>
       <div className="main">
         <header className="topbar"><Crumbs /><div className="spacer" /><a className="btn sm ghost hide-sm" href="https://github.com/Shine-5705/kavach" target="_blank" rel="noreferrer">GitHub</a></header>
-        <nav className="mobile-nav">{NAV.map(([to, label]) => <NavLink key={to} to={to} end={to === '/'}>{label}</NavLink>)}</nav>
+        <nav className="mobile-nav">{NAV.map(([to, label]) => <NavLink key={to} to={to} end={to === '/console'}>{label}</NavLink>)}</nav>
         <Routes>
           <Route path="/" element={<Overview />} />
-          <Route path="/engagements" element={<Engagements />} />
-          <Route path="/engagements/:id" element={<EngagementDetail />} />
-          <Route path="/findings" element={<Findings />} />
-          <Route path="/findings/:fid" element={<FindingDetail />} />
-          <Route path="/defenses" element={<Defenses />} />
-          <Route path="/sandbox" element={<Sandbox />} />
-          <Route path="/integrations" element={<Integrations />} />
-          <Route path="/protocol" element={<Protocol />} />
+          <Route path="engagements" element={<Engagements />} />
+          <Route path="engagements/:id" element={<EngagementDetail />} />
+          <Route path="findings" element={<Findings />} />
+          <Route path="findings/:fid" element={<FindingDetail />} />
+          <Route path="defenses" element={<Defenses />} />
+          <Route path="sandbox" element={<Sandbox />} />
+          <Route path="integrations" element={<Integrations />} />
+          <Route path="protocol" element={<Protocol />} />
           <Route path="*" element={<div className="page"><h1>Not found</h1></div>} />
         </Routes>
       </div>
@@ -77,5 +78,5 @@ function Shell() {
 
 export default function App() {
   useEffect(() => { startEngine() }, [])
-  return <HashRouter><Shell /></HashRouter>
+  return <HashRouter><Routes><Route path="/" element={<Landing />} /><Route path="/console/*" element={<Shell />} /><Route path="*" element={<Landing />} /></Routes></HashRouter>
 }

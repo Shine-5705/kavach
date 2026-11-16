@@ -26,7 +26,7 @@ from kavach import protocol as P
 from kavach.engagement import Engagement
 from kavach.guards import GuardSet
 from kavach.target.paisapal import PaisaPal
-from kavach.red import ATTACKS, UTILITY, ATTACKER
+from kavach.red import ATTACKS, UTILITY, ATTACKER, Red
 from kavach.skills import finch
 from kavach.blue import target_sources, assess
 finch.set_root('/home/pyodide/vendor/finch')
@@ -63,6 +63,39 @@ def k_audit():
     return json.dumps(out)
 def k_redact(text):
     return json.dumps(finch.pii_redact(text))
+def _target_with(rules):
+    g = GuardSet()
+    for r in rules:
+        g.install(r)
+    def make():
+        t = PaisaPal(g)
+        for r in g.of("code"):
+            setattr(t, r["params"]["switch"], True)
+        return t
+    return make
+def k_variants():
+    out = []
+    for a in ATTACKS:
+        for v in [{"id": a["id"], "steps": a["steps"], "technique": "original"}] + a["variants"]:
+            out.append({"attack": a["id"], "variant": v["id"], "technique": v["technique"], "steps": v["steps"],
+                        "oracle": a["oracle"], "title": a["title"], "category": a["category"], "owasp": a["owasp"]})
+    return json.dumps(out)
+def k_attack(idx, rules):
+    v = json.loads(k_variants())[idx]
+    r = Red(_target_with(json.loads(rules))).execute(v["steps"], v["oracle"])
+    r["tool_calls"] = [{k: c.get(k) for k in ("tool", "args", "allowed", "denied_by")} for c in r["tool_calls"]]
+    return json.dumps(dict(v, **r))
+def k_utility(rules):
+    return json.dumps(Red(_target_with(json.loads(rules))).utility())
+def k_compare(message, rules):
+    out = {}
+    for name, rs in (("unguarded", []), ("guarded", json.loads(rules))):
+        t = _target_with(rs)()
+        tr = t.respond(ATTACKER, message)
+        tr["tool_calls"] = [{k: c.get(k) for k in ("tool", "args", "allowed", "denied_by")} for c in tr["tool_calls"]]
+        tr["refunds"] = t.refunds()
+        out[name] = tr
+    return json.dumps(out)
 def k_catalog():
     return json.dumps({"attacks": ATTACKS, "utility": UTILITY, "attacker": ATTACKER, "version": __version__})
 `)
@@ -88,6 +121,14 @@ self.onmessage = async (ev) => {
       }
     } else if (m.type === 'chat') {
       post({ type: 'chat', req: m.req, trace: JSON.parse(py.globals.get('k_chat')(m.sid, JSON.stringify(m.rules || []), m.user, m.message)) })
+    } else if (m.type === 'variants') {
+      post({ type: 'variants', req: m.req, result: JSON.parse(py.globals.get('k_variants')()) })
+    } else if (m.type === 'attack') {
+      post({ type: 'attack', req: m.req, result: JSON.parse(py.globals.get('k_attack')(m.idx, JSON.stringify(m.rules || []))) })
+    } else if (m.type === 'utility') {
+      post({ type: 'utility', req: m.req, result: JSON.parse(py.globals.get('k_utility')(JSON.stringify(m.rules || []))) })
+    } else if (m.type === 'compare') {
+      post({ type: 'compare', req: m.req, result: JSON.parse(py.globals.get('k_compare')(m.message, JSON.stringify(m.rules || []))) })
     } else if (m.type === 'audit') {
       post({ type: 'audit', req: m.req, result: JSON.parse(py.globals.get('k_audit')()) })
     } else if (m.type === 'redact') {

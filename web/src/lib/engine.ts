@@ -56,3 +56,7 @@ export async function chat(sid: string, rules: Rule[], message: string, user = '
 }
 export async function audit(): Promise<{ result?: any; error?: string }> { return call({ type: 'audit' }) }
 export async function redact(text: string): Promise<{ result?: any; error?: string }> { return call({ type: 'redact', text }) }
+export async function variants(): Promise<{ result?: any[]; error?: string }> { return call({ type: 'variants' }) }
+export async function attack(idx: number, rules: Rule[]): Promise<{ result?: any; error?: string }> { return call({ type: 'attack', idx, rules }) }
+export async function utility(rules: Rule[]): Promise<{ result?: any; error?: string }> { return call({ type: 'utility', rules }) }
+export async function compare(message: string, rules: Rule[]): Promise<{ result?: any; error?: string }> { return call({ type: 'compare', message, rules }) }

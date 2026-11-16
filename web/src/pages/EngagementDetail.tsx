@@ -37,7 +37,7 @@ export default function EngagementDetail() {
   const msgs: Envelope[] = useMemo(() => rec ? rec.messages : isLive ? live!.messages.map(x => x.m) : [], [rec, isLive, live])
   const [thread, setThread] = useState<string>('')
   const [type, setType] = useState<string>('')
-  if (!rec && !isLive) return <div className="page">{live && live.id === id && live.error ? <div className="banner err">This engagement failed: {live.error}</div> : null}<div className="card"><Empty title="Engagement not found" action={<Link className="btn" to="/engagements">Back to engagements</Link>}>It may have been deleted, or it was recorded in another browser. Import its JSON to view it here.</Empty></div></div>
+  if (!rec && !isLive) return <div className="page">{live && live.id === id && live.error ? <div className="banner err">This engagement failed: {live.error}</div> : null}<div className="card"><Empty title="Engagement not found" action={<Link className="btn" to="/console/engagements">Back to engagements</Link>}>It may have been deleted, or it was recorded in another browser. Import its JSON to view it here.</Empty></div></div>
   const t0 = msgs[0]?.ts || 0
   const shown = msgs.filter(m => (!thread || m.thread === thread) && (!type || m.type === type))
   const findings = rec ? rec.findings : msgs.filter(m => m.type === 'FINDING').map(m => ({ ...m.body, status: msgs.some(x => x.type === 'VERIFIED' && x.thread === m.thread) ? 'verified' : 'open' }))
@@ -46,7 +46,7 @@ export default function EngagementDetail() {
   return (
     <div className="page" style={{ maxWidth: 1360 }}>
       <PageHead title={id!} sub={isLive ? <>Running in this tab · {msgs.length} messages so far</> : <>{fmtTime(rec!.createdAt)} · {rec!.source === 'import' ? 'Imported from the CLI' : 'Run in this browser'} · reasoner: {rec!.reasoner || 'offline'}</>}
-        actions={rec && <><button className="btn" onClick={() => downloadRecord(rec)}>Export JSON</button><Link className="btn" to={`/findings?e=${rec.id}`}>Findings</Link></>} />
+        actions={rec && <><button className="btn" onClick={() => downloadRecord(rec)}>Export JSON</button><Link className="btn" to={`/console/findings?e=${rec.id}`}>Findings</Link></>} />
       <div className="split">
         <div className="card">
           <div className="toolbar">

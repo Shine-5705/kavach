@@ -19,7 +19,7 @@ export default function Engagements() {
         actions={<><button className="btn" onClick={() => file.current?.click()}>Import JSON</button>
           <input ref={file} type="file" accept="application/json,.json" hidden onChange={async e => {
             const f = e.target.files?.[0]; e.target.value = ''; if (!f) return
-            try { setErr(''); const r = await importRecord(await f.text()); nav('/engagements/' + r.id) } catch (x: any) { setErr(x.message) }
+            try { setErr(''); const r = await importRecord(await f.text()); nav('/console/engagements/' + r.id) } catch (x: any) { setErr(x.message) }
           }} /></>} />
       {err && <div className="banner err">{err}</div>}
       {live?.error && <div className="banner err">The last engagement failed: {live.error}</div>}
@@ -31,17 +31,17 @@ export default function Engagements() {
               <input type="checkbox" checked={cats.includes(c)} onChange={() => toggle(c)} style={{ margin: 0 }} />{l}</label>))}</div>
           <div className="seg"><button className={pace ? 'on' : ''} onClick={() => setPace(260)}>Watch live</button><button className={!pace ? 'on' : ''} onClick={() => setPace(0)}>Fast</button></div>
           <button className="btn primary" disabled={eng.stage !== 'ready' || busy || !cats.length}
-            onClick={async () => nav('/engagements/' + await startRun(cats.length === 6 ? [] : cats, pace))}>
+            onClick={async () => nav('/console/engagements/' + await startRun(cats.length === 6 ? [] : cats, pace))}>
             {eng.stage !== 'ready' ? 'Engine loading…' : busy ? 'Running…' : 'Start engagement'}</button>
         </div>
       </div>
       <div className="card">
-        {busy && <Link to={'/engagements/' + live!.id} className="banner info" style={{ margin: 12 }}>Running <span className="mono">{live!.id}</span> · {live!.messages.length} messages so far · watch</Link>}
+        {busy && <Link to={'/console/engagements/' + live!.id} className="banner info" style={{ margin: 12 }}>Running <span className="mono">{live!.id}</span> · {live!.messages.length} messages so far · watch</Link>}
         {!list.length ? <Empty title="No engagements recorded">Start one above, or import a record produced by <span className="mono">python -m kavach run</span>.</Empty> : (
           <table className="t">
             <thead><tr><th>Engagement</th><th className="hide-sm">Started</th><th className="num">Findings</th><th>Attacks landing</th><th className="hide-sm">Benign served</th><th className="hide-sm num">Messages</th><th className="hide-sm">Source</th><th /></tr></thead>
             <tbody>{list.map(e => (
-              <tr key={e.id} className="click" onClick={() => nav('/engagements/' + e.id)}>
+              <tr key={e.id} className="click" onClick={() => nav('/console/engagements/' + e.id)}>
                 <td className="mono">{e.id}</td><td className="hide-sm muted">{fmtTime(e.createdAt)}</td>
                 <td className="num">{e.findings.filter(f => f.status === 'verified').length}/{e.findings.length} fixed</td>
                 <td><span className="mono">{e.metrics.baseline_attack_success.succeeded}/{e.metrics.baseline_attack_success.total}</span> <span className="faint">→</span> <span className="mono">{e.metrics.final_attack_success.succeeded}/{e.metrics.final_attack_success.total}</span></td>
