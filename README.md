@@ -13,6 +13,8 @@ SHA-256 hash chain that anyone can re-verify.
 
 **Live console:** https://shine-5705.github.io/kavach/ (the whole engine
 runs in your browser tab with Pyodide; no backend, no keys)
+· **Demo (96 s):** [media/kavach-demo.mp4](media/kavach-demo.mp4)
+· **Deck:** [media/kavach-deck.pdf](media/kavach-deck.pdf)
 
 Built for *Diwali Festiverse: The Agent-to-Agent Hackathon (India Edition)*,
 Security · Attack & Defend track, by Shine Gupta (team TheAdaply).
