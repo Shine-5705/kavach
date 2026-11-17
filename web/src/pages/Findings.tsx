@@ -26,7 +26,7 @@ export default function Findings() {
           <table className="t">
             <thead><tr><th>ID</th><th>Finding</th><th>Severity</th><th className="hide-sm">OWASP</th><th className="hide-sm">Oracle</th><th className="num hide-sm">Variants</th><th className="num">Rounds</th><th>Status</th></tr></thead>
             <tbody>{rows.map(f => (
-              <tr key={f.id} className="click" onClick={() => nav(`/findings/${f.id}?e=${rec.id}`)}>
+              <tr key={f.id} className="click" onClick={() => nav(`/console/findings/${f.id}?e=${rec.id}`)}>
                 <td className="mono">{f.id}</td><td className="title">{f.title}<div className="muted" style={{ fontWeight: 400, fontSize: 12.5 }}>{f.evidence.detail}</div></td>
                 <td><Sev s={f.severity} /></td><td className="hide-sm muted" style={{ fontSize: 12.5 }}>{f.owasp}</td>
                 <td className="hide-sm mono muted">{f.evidence.oracle}</td><td className="num hide-sm">{f.variants.length}</td><td className="num">{f.rounds}</td><td><Status s={f.status} /></td>

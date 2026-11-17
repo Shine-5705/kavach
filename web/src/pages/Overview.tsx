@@ -67,7 +67,7 @@ export default function Overview() {
             <table className="t">
               <thead><tr><th>Finding</th><th className="hide-sm">Category</th><th>Before</th><th>After</th><th className="num">Rounds</th><th>Status</th></tr></thead>
               <tbody>{rows.map(x => (
-                <tr key={x.attack} className="click" onClick={() => location.hash = `#/findings/${x.attack}?e=${r.id}`}>
+                <tr key={x.attack} className="click" onClick={() => location.hash = `#/console/findings/${x.attack}?e=${r.id}`}>
                   <td><span className="mono">{x.attack}</span> <span className="muted hide-sm">{x.f.title}</span></td>
                   <td className="hide-sm">{CATEGORY[x.cat]}</td>
                   <td style={{ minWidth: 120 }}><div className="bar"><span style={{ width: pct(x.b, x.total) + '%', background: 'var(--red)' }} /></div><span className="faint" style={{ fontSize: 12 }}>{x.b}/{x.total} landed</span></td>
