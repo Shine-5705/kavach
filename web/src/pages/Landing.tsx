@@ -385,7 +385,7 @@ function Architecture() {
         </svg>
         <div className="arch-foot">
           <span><i className="sw led" />Every message is canonical JSON, hashed with SHA-256 and linked to the previous one. The console re-verifies the chain with WebCrypto.</span>
-          <span><i className="sw dash" />Optional adapters (not run live): BAND transport for the ledger, Lyzr reasoner and LLM target.</span>
+          <span><i className="sw dash" />BAND transport mirrors the ledger live; Lyzr reasoner and LLM target are written but not connected yet.</span>
         </div>
       </div>
     </Section>
@@ -418,15 +418,15 @@ function Results({ rec, chainOk, fromArena }: { rec: EngagementRecord | null; ch
 
 const SPONSORS = [
   ['Finch', 'used', 'Runs in every engagement', 'Vendored code-security-audit and pii-redactor skills (MIT), called in-process by Blue for static triage, false-positive review, re-audit of the SQL fix, and the output PII guard. Runs in this tab too.'],
-  ['BAND', 'adapter', 'Adapter · not run live', 'Red and Blue as two BAND remote agents posting envelopes into a room. Tested against a local mock of the REST API; needs a BAND account and agent keys.'],
-  ['Lyzr', 'adapter', 'Adapter · not run live', 'LyzrReasoner writes Blue\'s triage rationale; LyzrTarget swaps PaisaPal for an LLM agent so the same oracles test a real model. Needs a Lyzr Studio API key.'],
-  ['AdaL', 'adapter', 'Adapter · not run', 'Drafts a remediation PR from an engagement record via headless AdaL. Needs an AdaL sign-in.'],
+  ['BAND', 'live', 'Ran live on api.band.ai', 'Red and Blue as two real BAND agents posting all 48 envelopes into one room, each @mentioning the other. Evidence in docs/evidence.'],
+  ['Lyzr', 'adapter', 'Adapter written · not connected yet', 'LyzrReasoner writes Blue\'s triage rationale; LyzrTarget swaps PaisaPal for an LLM agent so the same oracles test a real model. Lyzr sign-up failed with a server error while creating the organization, so there is no key yet.'],
+  ['AdaL', 'adapter', 'Adapter written · not connected yet', 'Drafts a remediation PR from an engagement record via headless AdaL. No AdaL sign-in yet.'],
   ['Agent37', 'recipe', 'Recipe only', 'Dockerfile for an always-on sandbox that re-attacks nightly. Not deployed.'],
 ] as const
 function Integrations() {
   return (
     <Section id="integrations" eyebrow="06 · Integrations" title="What's real, stated plainly" sub="Without keys, everything runs offline and the defenses never depend on an LLM.">
-      <div className="spons">{SPONSORS.map(([n, k, s, d]) => <div key={n} className={'sp ' + k}><div className="sp-top"><b>{n}</b><span className={'pill ' + (k === 'used' ? 'ok' : 'mut')}><i />{s}</span></div><p>{d}</p></div>)}</div>
+      <div className="spons">{SPONSORS.map(([n, k, s, d]) => <div key={n} className={'sp ' + k}><div className="sp-top"><b>{n}</b><span className={'pill ' + (k === 'used' || k === 'live' ? 'ok' : 'mut')}><i />{s}</span></div><p>{d}</p></div>)}</div>
       <div className="panel det">
         <div className="panel-head"><span>Deterministic by design</span></div>
         <div className="det-b">

@@ -114,9 +114,9 @@ The console lives at `#/console`.
 | Platform | How Kavach uses it | Status |
 |---|---|---|
 | **Finch** | `code-security-audit` and `pii-redactor` skills vendored (MIT) and called in-process by Blue: static triage, false-positive review, re-audit of code fixes, PII measurement and the output PII guard | **Runs** in every engagement (30 calls per run), in CPython and in the browser |
-| **BAND** | Red and Blue as two BAND remote agents; Blue opens a room and each envelope is posted with an @mention of the other agent (`--band`) | Adapter built and tested against a local mock of BAND's REST API. Needs a BAND account and two agent keys to run live |
-| **Lyzr** | `LyzrReasoner` writes Blue's triage rationale; `LyzrTarget` swaps PaisaPal for an LLM agent on Lyzr so the same oracles test a real model (`--lyzr`) | Adapter built, needs a Lyzr Studio API key |
-| **AdaL** | Headless AdaL drafts the remediation PR from an engagement record (`adal-pr`); brief for the demo film in `docs/ADAL_VIDEO.md` | Adapter built, needs an AdaL sign-in |
+| **BAND** | Red and Blue as two BAND remote agents; Blue opens a room and each envelope is posted with an @mention of the other agent (`--band`) | **Runs live.** Run on 19 Nov 2026 (IST) against api.band.ai with two real BAND agents (`kavach-red`, `kavach-blue`): room `7ff43cce-3629-492f-8a0d-aea4d893f640`, all 48 envelopes posted, each readable by its recipient agent through the Agent API. Evidence in `docs/evidence/`. One envelope carries a live SQL-injection string that BAND's edge WAF rejects with an HTML 403, so the adapter re-sends it base64-encoded with a sha256 (1 of 48) |
+| **Lyzr** | `LyzrReasoner` writes Blue's triage rationale; `LyzrTarget` swaps PaisaPal for an LLM agent on Lyzr so the same oracles test a real model (`--lyzr`) | Adapter written, **not connected yet**: Lyzr sign-up failed with a server error while creating the organization, so no key exists |
+| **AdaL** | Headless AdaL drafts the remediation PR from an engagement record (`adal-pr`); brief for the demo film in `docs/ADAL_VIDEO.md` | Adapter written, **not connected yet**: no AdaL sign-in yet |
 | **Agent37** | Dockerfile for an always-on sandbox that re-attacks nightly and keeps records on its persistent disk (`deploy/agent37.md`) | Recipe only, not deployed |
 
 Without keys, everything runs offline and the console says so. Defenses never

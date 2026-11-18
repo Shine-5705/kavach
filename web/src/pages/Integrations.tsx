@@ -3,8 +3,8 @@ import { audit, redact, useEngine } from '../lib/engine'
 import { Badge, PageHead, Sev } from '../components/ui'
 
 const REPO = 'https://github.com/Shine-5705/kavach/blob/main/'
-type S = 'live' | 'ready' | 'recipe'
-const STATUS: Record<S, [string, string]> = { live: ['verified', 'Running in this browser'], ready: ['running', 'Adapter built · needs account'], recipe: ['low', 'Deploy recipe · needs account'] }
+type S = 'live' | 'cli' | 'ready' | 'recipe'
+const STATUS: Record<S, [string, string]> = { live: ['verified', 'Running in this browser'], cli: ['verified', 'Ran live against api.band.ai'], ready: ['low', 'Adapter written · not connected yet'], recipe: ['low', 'Deploy recipe · needs account'] }
 
 function Row({ name, role, status, children, side }: { name: string; role: string; status: S; children: React.ReactNode; side: React.ReactNode }) {
   return <div className="int-row"><div><div className="name">{name}</div><div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>{role}</div><div style={{ marginTop: 8 }}><Badge kind={STATUS[status][0]}>{STATUS[status][1]}</Badge></div></div>
@@ -34,8 +34,8 @@ export default function Integrations() {
             <button className="btn sm" style={{ height: 30 }} disabled={eng.stage !== 'ready'} onClick={async () => setR(await redact(txt))}>Run pii-redactor</button></div>
           {r?.result?.ok && <div className="quote mono" style={{ marginTop: 8 }}>{r.result.data.files[0].redacted_content}<div className="faint" style={{ marginTop: 4 }}>verified: {String(r.result.data.files[0].redaction_verified ?? r.result.data.redaction_verified)}</div></div>}
         </Row>
-        <Row name="BAND" role="Agent-to-agent transport · rooms, @mention routing" status="ready"
-          side={<><a href={REPO + 'engine/kavach/adapters/band.py'} style={{ textDecoration: 'underline' }}>adapters/band.py</a><br /><span className="muted">Tested against a local mock of BAND's documented REST API, not against BAND itself.</span></>}>
+        <Row name="BAND" role="Agent-to-agent transport · rooms, @mention routing" status="cli"
+          side={<><a href={REPO + 'engine/kavach/adapters/band.py'} style={{ textDecoration: 'underline' }}>adapters/band.py</a><br /><span className="muted">Ran live on 19 Nov 2026 against api.band.ai: room 7ff43cce-3629-492f-8a0d-aea4d893f640, 48 of 48 envelopes posted by the two real agents. Evidence: docs/evidence/ in the repo. One envelope with a live SQL-injection string is blocked by BAND's WAF, so it is re-sent base64-encoded with a sha256.</span></>}>
           <ul><li>Red and Blue are registered as two BAND remote agents. Blue opens a room and adds Red, plus you if you like.</li>
             <li>Every envelope is posted by its sender with an @mention of the other agent, so the hash-chained log also lives in BAND.</li></ul>
           <pre className="code" style={{ marginTop: 10 }}>{`export BAND_RED_ID=… BAND_RED_KEY=… BAND_BLUE_ID=… BAND_BLUE_KEY=…
@@ -44,14 +44,14 @@ python -m kavach run --band --out engagement.json`}</pre>
           <p className="muted" style={{ fontSize: 12.5, marginTop: 6 }}>Agent keys stay on your machine. This page never asks for them.</p>
         </Row>
         <Row name="Lyzr" role="LLM reasoning · Blue's analyst, optional LLM target" status="ready"
-          side={<><a href={REPO + 'engine/kavach/adapters/lyzr.py'} style={{ textDecoration: 'underline' }}>adapters/lyzr.py</a><br /><span className="muted">Not yet run: needs a Lyzr Agent Studio key.</span></>}>
+          side={<><a href={REPO + 'engine/kavach/adapters/lyzr.py'} style={{ textDecoration: 'underline' }}>adapters/lyzr.py</a><br /><span className="muted">Adapter written, not connected yet: Lyzr sign-up failed with a server error while creating the organization.</span></>}>
           <ul><li><b>LyzrReasoner</b> writes Blue's triage rationale from the finding JSON. If Lyzr fails, Blue falls back to its template and says so. Defenses never depend on the LLM.</li>
             <li><b>LyzrTarget</b> points Red at an LLM agent hosted on Lyzr instead of the deterministic PaisaPal planner, so the same oracles test a real model.</li></ul>
           <pre className="code" style={{ marginTop: 10 }}>{`export LYZR_API_KEY=… LYZR_BLUE_AGENT_ID=…
 python -m kavach run --lyzr`}</pre>
         </Row>
         <Row name="AdaL" role="Agent harness · remediation PR and launch video" status="ready"
-          side={<><a href={REPO + 'engine/kavach/adapters/adal.py'} style={{ textDecoration: 'underline' }}>adapters/adal.py</a><br /><span className="muted">Not yet run: needs an AdaL sign-in.</span></>}>
+          side={<><a href={REPO + 'engine/kavach/adapters/adal.py'} style={{ textDecoration: 'underline' }}>adapters/adal.py</a><br /><span className="muted">Adapter written, not connected yet: no AdaL sign-in yet.</span></>}>
           <ul><li>Runs AdaL headless on an engagement record to draft the remediation pull request: one section per finding, with the attack, the defense and the retest that proved it.</li>
             <li>The demo video plan for AdaL is in <span className="mono">docs/ADAL_VIDEO.md</span>.</li></ul>
           <pre className="code" style={{ marginTop: 10 }}>{`curl -fsSL https://adal.sylph.ai/install.sh | bash && adal   # sign in once

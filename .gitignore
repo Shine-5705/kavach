@@ -6,3 +6,4 @@ __pycache__/
 .env
 engagement*.json
 !web/public/samples/*.json
+.secrets/

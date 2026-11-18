@@ -132,7 +132,7 @@ export function buildReport(rec: EngagementRecord, chainOk: boolean | null): str
   }
   const head = rec.messages[rec.messages.length - 1]?.hash
   lines.push('', `## Integrity`, '', `Chain head: \`${head}\`. Re-verify with \`python -m kavach verify ${rec.id}.json\` after exporting the record from the console.`, '',
-    `## Scope`, '', `Sandbox target with synthetic customers. Finch skills ran in-process. BAND, Lyzr and AdaL adapters were not used in this run.`, '')
+    `## Scope`, '', `Sandbox target with synthetic customers. Finch skills ran in-process. BAND, Lyzr and AdaL adapters were not used in this exported run (BAND has a separate live run, see docs/evidence).`, '')
   return lines.join('\n')
 }
 

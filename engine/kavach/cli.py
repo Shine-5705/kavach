@@ -67,7 +67,7 @@ def main(argv=None) -> int:
             c = COLORS.get(m["from"], "")
             print(f"{m['seq']:>3} {c}{m['from']:>4}\033[0m -> {m['to']:<4} {m['type']:<9} {m['summary']}")
     rec = e.record()
-    rec["transport"] = {"band": {"room": transport.room_id, "sent": transport.sent, "errors": transport.errors}} if transport else None
+    rec["transport"] = {"band": {"room": transport.room_id, "sent": transport.sent, "waf_encoded": transport.encoded, "errors": transport.errors}} if transport else None
     rec["reasoner"] = "lyzr" if reasoner else "offline"
     with open(args.out, "w") as fh:
         json.dump(rec, fh, indent=1, ensure_ascii=False)
